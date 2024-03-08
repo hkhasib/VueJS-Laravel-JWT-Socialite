@@ -49,7 +49,11 @@ class AuthController extends Controller
     }
 
     public function redirectGoogle(){
-        return Socialite::driver('google')->redirect();
+        $url= Socialite::driver('google')->redirect()->getTargetUrl();
+
+        return response()->json([
+            "url"=>$url
+        ]);
     }
     public function callbackGoogle(){
         try{
@@ -69,7 +73,13 @@ class AuthController extends Controller
                         'message'=>'Something went wrong'
                     ]);
                 }
-                return $this->createNewToken($token);
+                //return $this->createNewToken($token);
+
+                return '<script type="text/JavaScript">
+     localStorage.setItem("token","'.$token.'");
+     window.location.href="/dashboard";
+     </script>'
+                ;
 
             }
             else{
@@ -79,7 +89,12 @@ class AuthController extends Controller
                         'message'=>'Something went wrong'
                     ]);
                 }
-                return $this->createNewToken($token);
+                //return $this->createNewToken($token);
+                return '<script type="text/JavaScript">
+     localStorage.setItem("token", "'.$token.'");
+     window.location.href="/dashboard";
+     </script>'
+                    ;
             }
 
         }
@@ -92,17 +107,54 @@ class AuthController extends Controller
     }
 
     public function redirectTwitter(){
-        return Socialite::driver('twitter')->redirect();
+        $url = Socialite::driver('twitter')->redirect()->getTargetUrl();
+        return response()->json([
+            "url"=>$url
+        ]);
     }
 
     public function callbackTwitter(){
         try{
             $twitter_user = Socialite::driver('twitter')->user();
             //return [$google_user->getEmail(),$google_user->getId(), $google_user->getName()];
-            return response()->json([
-                'status'=>'success',
-                'message'=>$twitter_user
-            ]);
+            $user=User::where('twitter_id',$twitter_user->getId())->first();
+
+            if(!$user){
+                $new_user=User::create([
+                    'name'=>$twitter_user->getName(),
+                    'email'=>$twitter_user->getEmail(),
+                    'twitter_id'=>$twitter_user->getId(),
+                ]);
+                if(!$token=Auth::login($new_user)){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>'Something went wrong'
+                    ]);
+                }
+                //return $this->createNewToken($token);
+
+                return '<script type="text/JavaScript">
+     localStorage.setItem("token","'.$token.'");
+     window.location.href="/dashboard";
+     </script>'
+                    ;
+
+            }
+            else{
+                if(!$token=Auth::login($user)){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>'Something went wrong'
+                    ]);
+                }
+                //return $this->createNewToken($token);
+                return '<script type="text/JavaScript">
+     localStorage.setItem("token", "'.$token.'");
+     window.location.href="/dashboard";
+     </script>'
+                    ;
+            }
+
         }
         catch (\Throwable $th){
             return response()->json([
@@ -122,6 +174,22 @@ class AuthController extends Controller
         return $this->createNewToken($token);
     }
 
+    public function logout(){
+        \auth()->logout();
+        return response()->json(['message'=>'User successfully logged out!']);
+    }
+
+    public function detailedProfile($id){
+        $user=User::where('id',$id)->first();
+        return response()->json([
+            'status'=>'success',
+            'data'=>$user
+        ]);
+    }
+
+    public function profile(){
+        return response()->json(['data'=>\auth()->user()]);
+    }
 
     public function createNewToken($token){
         return response()->json([
