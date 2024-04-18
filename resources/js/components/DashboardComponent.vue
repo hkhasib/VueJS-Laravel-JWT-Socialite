@@ -5,7 +5,7 @@
             <h1>Welcome: {{data.name}} to the Dashboard</h1>
 
             <qrcode-vue :value="QRValue" :size="300" level="H" /><br>
-
+<h2>Link</h2>
             <a :href="QRValue"> {{QRValue}}</a>
         </div>
     </div>

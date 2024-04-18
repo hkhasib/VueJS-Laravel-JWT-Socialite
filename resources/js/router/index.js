@@ -5,6 +5,8 @@ import ExampleComponent from "@/components/ExampleComponent.vue";
 import RegComponent from "@/components/RegComponent.vue";
 import DashboardComponent from "@/components/DashboardComponent.vue";
 import UserComponent from "@/components/UserComponent.vue";
+import TwitterAuthHandleComponent from "@/components/TwitterAuthHandleComponent.vue";
+import GoogleAuthHandleComponent from "@/components/GoogleAuthHandleComponent.vue";
 
 const routes =[
     {
@@ -21,6 +23,16 @@ const routes =[
         path: '/register',
         name: 'register',
         component: RegComponent
+    },
+    {
+        path: '/auth/twitter/call-back',
+        name: 'twitterHandle',
+        component: TwitterAuthHandleComponent
+    },
+    {
+        path: '/auth/google/call-back',
+        name: 'googleHandle',
+        component: GoogleAuthHandleComponent
     },
     {
         path: '/dashboard',

@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/try-google',[AuthController::class,'redirectGoogle']);
-Route::get('/auth/google/call-back',[AuthController::class,'callbackGoogle']);
+Route::get('/google/call-back-server',[AuthController::class,'callbackGoogle']);
 
 Route::get('/try-twitter',[AuthController::class,'redirectTwitter']);
-Route::get('/auth/twitter/call-back',[AuthController::class,'callbackTwitter']);
+Route::get('/twitter/call-back-server',[AuthController::class,'callbackTwitter']);
 
 Route::get('/{any}', function () {
     return view('index');
