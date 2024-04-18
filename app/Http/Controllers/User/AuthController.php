@@ -73,13 +73,13 @@ class AuthController extends Controller
                         'message'=>'Something went wrong'
                     ]);
                 }
-                //return $this->createNewToken($token);
+                return $this->createNewToken($token);
 
-                return '<script type="text/JavaScript">
-     localStorage.setItem("token","'.$token.'");
-     window.location.href="/dashboard";
-     </script>'
-                ;
+//                return '<script type="text/JavaScript">
+//     localStorage.setItem("token","'.$token.'");
+//     window.location.href="/dashboard";
+//     </script>'
+//                ;
 
             }
             else{

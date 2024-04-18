@@ -31,7 +31,7 @@ const routes =[
     },
     {
         path: '/auth/google/call-back',
-        name: 'twitterHandle',
+        name: 'googleHandle',
         component: GoogleAuthHandleComponent
     },
     {
